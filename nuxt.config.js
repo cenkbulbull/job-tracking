@@ -23,7 +23,9 @@ export default {
   ** Global CSS
   */
   css: [
-    'vuesax/dist/vuesax.css'
+    'vuesax/dist/vuesax.css',
+    'bootstrap/dist/css/bootstrap.min.css',
+    'boxicons/css/boxicons.min.css'
   ],
   /*
   ** Plugins to load before mounting the App
