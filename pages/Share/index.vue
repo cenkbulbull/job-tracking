@@ -6,13 +6,6 @@
       </vs-alert>
     </div>
     <div class="center content-inputs mt-4 w-100">
-      <!--<textarea
-        class="form-control w-100"
-        style="background-color: #f4f7f8"
-        placeholder="Today's tasks"
-        rows="10"
-        v-model="task"
-      ></textarea>-->
       <client-only placeholder="Today's tasks">
         <ckeditor-nuxt v-model="task" :config="editorConfig"/>
       </client-only>
@@ -91,7 +84,7 @@ export default {
 };
 </script>
 <style>
-.ck-content { height:220px; }
+.ck-content { height:220px;font-size: 13px; }
 </style>
 <style scoped>
 .vstable {

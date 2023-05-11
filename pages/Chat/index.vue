@@ -46,12 +46,12 @@
           <div class="chat">
             <div class="chat-header clearfix">
               <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-10">
                   <div class="chat-about">
                     <h6 class="mt-3">{{ activeChatUser }}</h6>
                   </div>
                 </div>
-                <div class="col-lg-4 hidden-sm text-right">
+                <div class="col-lg-1 hidden-sm text-right">
                   <input
                     ref="file"
                     type="file"
@@ -81,6 +81,29 @@
                         d="M19.903 8.586a.997.997 0 0 0-.196-.293l-6-6a.997.997 0 0 0-.293-.196c-.03-.014-.062-.022-.094-.033a.991.991 0 0 0-.259-.051C13.04 2.011 13.021 2 13 2H6c-1.103 0-2 .897-2 2v16c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V9c0-.021-.011-.04-.013-.062a.952.952 0 0 0-.051-.259c-.01-.032-.019-.063-.033-.093zM16.586 8H14V5.414L16.586 8zM6 20V4h6v5a1 1 0 0 0 1 1h5l.002 10H6z"
                       ></path>
                       <path d="M8 12h8v2H8zm0 4h8v2H8zm0-8h2v2H8z"></path>
+                    </svg>
+                  </vs-button>
+                </div>
+
+                <div class="col-lg-1 hidden-sm text-right">
+                  <vs-button :disabled="!activeChatUser" icon>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      style="
+                        fill: rgba(250, 250, 250, 1);
+                        transform: ;
+                        msfilter: ;
+                      "
+                    >
+                      <path
+                        d="M14 12c-1.095 0-2-.905-2-2 0-.354.103-.683.268-.973C12.178 9.02 12.092 9 12 9a3.02 3.02 0 0 0-3 3c0 1.642 1.358 3 3 3 1.641 0 3-1.358 3-3 0-.092-.02-.178-.027-.268-.29.165-.619.268-.973.268z"
+                      ></path>
+                      <path
+                        d="M12 5c-7.633 0-9.927 6.617-9.948 6.684L1.946 12l.105.316C2.073 12.383 4.367 19 12 19s9.927-6.617 9.948-6.684l.106-.316-.105-.316C21.927 11.617 19.633 5 12 5zm0 12c-5.351 0-7.424-3.846-7.926-5C4.578 10.842 6.652 7 12 7c5.351 0 7.424 3.846 7.926 5-.504 1.158-2.578 5-7.926 5z"
+                      ></path>
                     </svg>
                   </vs-button>
                 </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="hidden">
-    <vs-sidebar absolute reduce v-model="active" open>
+    <vs-sidebar class="sidebar" absolute reduce v-model="active" open>
       <template #logo>
         <!-- ...img logo -->
       </template>
@@ -68,3 +68,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+  .sidebar{
+    position: fixed !important;
+  }
+</style>
