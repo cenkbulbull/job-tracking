@@ -45,7 +45,7 @@
         <vs-alert warn style="height: 270px" class="overflow-auto">
           <div>
             <h6 class="mt-2 d-inline">Çözümlenmeyen Problem</h6>
-            <vs-button danger class="custom-vs-btn float-end">
+            <vs-button @click="removeIssue" danger class="custom-vs-btn float-end">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -58,7 +58,7 @@
                 ></path>
               </svg>
             </vs-button>
-            <vs-button class="custom-vs-btn float-end">
+            <vs-button @click="seeSolutions" class="custom-vs-btn float-end">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -96,7 +96,7 @@
           </div>
           <!-- ÇÖZÜMLENMEYEN PROBLEM İÇERİĞİ -->
         </vs-alert>
-        <vs-button class="float-end">
+        <vs-button @click="downloadFiles" class="float-end">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="18"
@@ -110,7 +110,7 @@
             ></path>
           </svg>
         </vs-button>
-        <vs-button class="float-end">
+        <vs-button@click="seePictures" class="float-end">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="18"
@@ -145,7 +145,7 @@
                 </div>
               </div>
               <div class="d-flex">
-                <vs-button>
+                <vs-button @click="downloadFiles">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="18"
@@ -163,7 +163,7 @@
                     ></path>
                   </svg>
                 </vs-button>
-                <vs-button success @click="problemAnswer = !problemAnswer;">
+                <vs-button success @click="problemAnswer = !problemAnswer">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="18"
@@ -223,26 +223,20 @@
     <div class="center">
       <vs-dialog width="300px" not-center v-model="problemAnswer">
         <template #header>
-          <h4 class="not-margin">
-            Sorunun sahibi
-          </h4>
+          <h4 class="not-margin">Sorunun sahibi</h4>
         </template>
 
         <div class="con-content">
-          <!--<textarea
-            class="form-control w-100"
-            style="background-color: #f4f7f8; width: 200px"
-            placeholder="Message"
-            rows="5"
-          ></textarea>-->
           <client-only placeholder="Today's tasks">
-          <ckeditor-nuxt :config="editorConfig" />
-        </client-only>
+            <ckeditor-nuxt :config="editorConfig" />
+          </client-only>
         </div>
 
         <template #footer>
           <div class="con-footer">
-            <vs-button @click="problemAnswer = false" transparent> Ok </vs-button>
+            <vs-button @click="sendReply" transparent>
+              Ok
+            </vs-button>
             <vs-button @click="problemAnswer = false" dark transparent>
               Cancel
             </vs-button>
@@ -311,8 +305,7 @@ export default {
       "https://static.toiimg.com/photo/72975551.cms",
     ],*/
     index: null,
-    problemAnswer:null,
-
+    problemAnswer: null,
   }),
   methods: {
     onChangeFile(e) {
@@ -321,6 +314,23 @@ export default {
       this.selectedImage = URL.createObjectURL(file);
       console.log(this.selectedImage);
     },
+    removeIssue(){
+      console.log("sorununuz silindi")
+    },
+    seeSolutions(){
+      console.log("sorunları gör")
+    },
+    downloadFiles(){
+      console.log("dosyalar indiriliyor")
+    },
+    seePictures(){
+      console.log("resimleri gör")
+    },
+    sendReply(){
+      console.log("cevap gönderildi")
+      this.problemAnswer = false
+    }
+
   },
 };
 </script>

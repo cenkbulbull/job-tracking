@@ -86,7 +86,7 @@
                 </div>
 
                 <div class="col-lg-1 hidden-sm text-right">
-                  <vs-button :disabled="!activeChatUser" icon>
+                  <vs-button @click="meeting" :disabled="!activeChatUser" icon>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -164,7 +164,7 @@
                   class="form-control"
                 />
                 <div class="input-group-prepend">
-                  <vs-button success :disabled="!activeChatUser" @click="">
+                  <vs-button success :disabled="!activeChatUser" @click="sendMessage">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -307,6 +307,12 @@ export default {
       this.selectedImage = URL.createObjectURL(file);
       console.log(this.selectedImage)
     },
+    meeting(){
+      console.log("görüşme talebi yollandı")
+    },
+    sendMessage(){
+      console.log("mesaj gönder")
+    }
   },
 };
 </script>

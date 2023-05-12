@@ -16,7 +16,7 @@
           class="text-break"
           :key="i"
           v-for="(tr, i) in $vs.getPage(users, page, max)"
-          :data="tr" 
+          :data="tr"
         >
           <vs-row w="12">
             <vs-col w="1">
@@ -37,7 +37,7 @@
             <vs-col w="1">
               <vs-td>
                 <vs-td>
-                  <vs-button success icon
+                  <vs-button @click="approve" success icon
                     ><svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -53,7 +53,7 @@
                         d="M19.221 10.803 12 10V4a2 2 0 0 0-4 0v12l-3.031-1.212a2 2 0 0 0-2.64 1.225l-.113.34a.998.998 0 0 0 .309 1.084l5.197 4.332c.179.149.406.231.64.231H19a2 2 0 0 0 2-2v-7.21a2 2 0 0 0-1.779-1.987z"
                       ></path></svg
                   ></vs-button>
-                  <vs-button icon>
+                  <vs-button @click="meeting" icon>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -76,8 +76,8 @@
                   <vs-button
                     icon
                     @click="
-                      active3 = !active3;
-                      send = tr.name;
+                      taskEditing = !taskEditing;
+                      editedUser = tr.name;
                     "
                     ><svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -104,10 +104,10 @@
         </vs-tr>
         <!-- popup start-->
         <div class="center">
-          <vs-dialog width="300px" not-center v-model="active3">
+          <vs-dialog width="300px" not-center v-model="taskEditing">
             <template #header>
               <h4 class="not-margin">
-                <b>{{ send }}</b>
+                <b>{{ editedUser }}</b>
               </h4>
             </template>
 
@@ -117,14 +117,14 @@
                 style="background-color: #f4f7f8; width: 200px"
                 placeholder="Message"
                 rows="5"
-                v-model="input1"
+                v-model="editingInput"
               ></textarea>
             </div>
 
             <template #footer>
               <div class="con-footer">
-                <vs-button @click="active3 = false" transparent> Ok </vs-button>
-                <vs-button @click="active3 = false" dark transparent>
+                <vs-button @click="edit" transparent> Ok </vs-button>
+                <vs-button @click="taskEditing = false" dark transparent>
                   Cancel
                 </vs-button>
               </div>
@@ -156,9 +156,9 @@ export default {
   layout: "loggedIn",
   components: {},
   data: () => ({
-    active3: false,
-    input1: "",
-    send: null,
+    taskEditing: false,
+    editingInput: "",
+    editedUser: null,
 
     page: 1,
     max: 3,
@@ -238,6 +238,18 @@ export default {
       },
     ],
   }),
+  methods: {
+    edit() {
+      console.log("edit");
+      this.taskEditing = false;
+    },
+    approve(){
+      console.log("onaylandı")
+    },
+    meeting(){
+      console.log("görüşme talebi yollandı")
+    }
+  },
 };
 </script>
 

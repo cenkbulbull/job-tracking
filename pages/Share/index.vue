@@ -7,10 +7,30 @@
     </div>
     <div class="center content-inputs mt-4 w-100">
       <client-only placeholder="Today's tasks">
-        <ckeditor-nuxt v-model="task" :config="editorConfig"/>
+        <ckeditor-nuxt
+          v-if="!mytasks[0].task"
+          v-model="task"
+          :config="editorConfig"
+        />
+        <ckeditor-nuxt
+          v-if="mytasks[0].task"
+          v-model="mytasks[0].task"
+          :config="editorConfig"
+        />
       </client-only>
-      <vs-button class="float-end mt-2" @click=""> Paylaş </vs-button>
-      <vs-button success disabled class="float-end mt-2" @click="">
+      <vs-button
+        :disabled="mytasks[0].task"
+        class="float-end mt-2"
+        @click="shareTask"
+      >
+        Paylaş
+      </vs-button>
+      <vs-button
+        :disabled="!mytasks[0].task"
+        success
+        class="float-end mt-2"
+        @click="edittedTask"
+      >
         Düzenle
       </vs-button>
     </div>
@@ -26,7 +46,7 @@
           >
             <vs-td>
               <vs-alert warn>
-                {{ tr.task }}
+                {{ strip_tags(tr.task) }}
               </vs-alert>
             </vs-td>
             <vs-td>
@@ -47,11 +67,8 @@
           </vs-tr>
         </template>
         <template #notFound>
-          <vs-alert warn>
-              Henüz bir taskınız yok
-          </vs-alert>
+          <vs-alert warn> Henüz bir taskınız yok </vs-alert>
         </template>
-
       </vs-table>
     </div>
   </div>
@@ -69,8 +86,20 @@ export default {
   },
   data: () => ({
     editorConfig: {
-      toolbar: [ 'Undo', 'Redo','RemoveFormat','Bold','Link','Code','codeblock','Blockquote','Superscript','Subscript','SpecialCharacters'],
-      removePlugins: [ 'Title' ],
+      toolbar: [
+        "Undo",
+        "Redo",
+        "RemoveFormat",
+        "Bold",
+        "Link",
+        "Code",
+        "codeblock",
+        "Blockquote",
+        "Superscript",
+        "Subscript",
+        "SpecialCharacters",
+      ],
+      removePlugins: ["Title"],
     },
     task: "",
     mytasks: [
@@ -81,10 +110,25 @@ export default {
       },
     ],
   }),
+  methods: {
+    shareTask() {
+      console.log("task paylaşıldı");
+    },
+    edittedTask(){
+      console.log("task düzenlendi");
+    },
+    //ckeditörden gelen html taglarını temizleme
+    strip_tags(remove) {
+      return remove.replace(/(<([^>]+)>)/gi, "");
+    },
+  },
 };
 </script>
 <style>
-.ck-content { height:220px;font-size: 13px; }
+.ck-content {
+  height: 220px;
+  font-size: 13px;
+}
 </style>
 <style scoped>
 .vstable {
