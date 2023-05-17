@@ -1,3 +1,4 @@
+const bodyParser = require("body-parser")
 
 export default {
   mode: 'universal',
@@ -50,6 +51,7 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    baseUrl: "http://localhost:3000/api"
   },
   /*
   ** Build configuration
@@ -60,5 +62,9 @@ export default {
     */
     extend (config, ctx) {
     }
-  }
+  },
+  serverMiddleware:[
+    bodyParser.json(),
+    "~/api"
+  ]
 }

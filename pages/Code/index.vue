@@ -12,7 +12,7 @@
         <client-only placeholder="Today's tasks">
           <ckeditor-nuxt v-model="errorText" :config="editorConfig" />
         </client-only>
-        <vs-button class="float-end mt-2" @click=""> Paylaş </vs-button>
+        <vs-button class="float-end mt-2" @click="shareProblem"> Paylaş </vs-button>
       </div>
       <div>
         <input
@@ -110,7 +110,7 @@
             ></path>
           </svg>
         </vs-button>
-        <vs-button@click="seePictures" class="float-end">
+        <vs-button @click="seePictures" class="float-end">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="18"
@@ -314,11 +314,15 @@ export default {
       this.selectedImage = URL.createObjectURL(file);
       console.log(this.selectedImage);
     },
+    shareProblem(){
+      console.log("sorun paylaşıldı")
+    },
     removeIssue(){
       console.log("sorununuz silindi")
     },
     seeSolutions(){
-      console.log("sorunları gör")
+      //console.log("sorunları gör")
+      this.$router.push("Code/Answer")
     },
     downloadFiles(){
       console.log("dosyalar indiriliyor")

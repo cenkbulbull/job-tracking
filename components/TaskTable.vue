@@ -1,13 +1,13 @@
  <template>
   <div class="center ms-5">
-    <vs-table striped>
+    <vs-table striped >
       <template #thead>
         <vs-tr class="d-flex align-items-center bg-light">
-          <vs-row w="12">
-            <vs-col w="1"><vs-th>Id</vs-th></vs-col>
-            <vs-col w="2"><vs-th>İsim</vs-th></vs-col>
-            <vs-col w="8"><vs-th style="width: 150px">İş Tanımı</vs-th></vs-col>
-            <vs-col w="1"><vs-th> </vs-th></vs-col>
+          <vs-row :w="12">
+            <vs-col :w="2"><vs-th>Durum</vs-th></vs-col>
+            <vs-col :w="2"><vs-th>İsim</vs-th></vs-col>
+            <vs-col :w="7"><vs-th style="width: 150px">İş Tanımı</vs-th></vs-col>
+            <vs-col :w="1"><vs-th> </vs-th></vs-col>
           </vs-row>
         </vs-tr>
       </template>
@@ -15,29 +15,29 @@
         <vs-tr
           class="text-break"
           :key="i"
-          v-for="(tr, i) in $vs.getPage(users, page, max)"
+          v-for="(tr, i) in $vs.getPage(getTask, page, max)"
           :data="tr"
         >
-          <vs-row w="12">
-            <vs-col w="1">
+          <vs-row :w="12">
+            <vs-col :w="2">
               <vs-td>
-                {{ tr.id }}
+                <div style="width:100px;" class="alert text-center" :class="tr.status ? 'alert-success': 'alert-danger'"><b>{{ tr.status ? "Onaylandı" : "Bekliyor" }}</b></div>
               </vs-td>
             </vs-col>
-            <vs-col w="2">
+            <vs-col :w="2">
               <vs-td>
                 {{ tr.name }}
               </vs-td>
             </vs-col>
-            <vs-col w="8">
+            <vs-col :w="7">
               <vs-td>
-                {{ tr.email }}
+                {{ tr.text }}
               </vs-td>
             </vs-col>
-            <vs-col w="1">
+            <vs-col :w="1">
               <vs-td>
                 <vs-td>
-                  <vs-button @click="approve" success icon
+                  <vs-button :flat="tr.status" @click="approve(getTask[i])" success icon
                     ><svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -133,13 +133,12 @@
         </div>
         <!-- popup finish-->
       </template>
-
       <!--pagination-->
       <template #footer>
         <vs-pagination
           class="fixed-bottom mb-3"
           v-model="page"
-          :length="$vs.getLength(users, max)"
+          :length="$vs.getLength(getTask, max)"
         />
       </template>
       <!--pagination-->
@@ -156,100 +155,35 @@ export default {
   layout: "loggedIn",
   components: {},
   data: () => ({
+    //table
+    page: 1,
+    max: 3,
+    //table 
     taskEditing: false,
     editingInput: "",
     editedUser: null,
 
-    page: 1,
-    max: 3,
-    users: [
-      {
-        id: 111,
-        name: "Leanne Graham",
-        username: "Bret",
-        email:
-          "Sincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.biz",
-        website: "hildegard.org",
-      },
-      {
-        id: 243,
-        name: "Ervin Howell",
-        username: "Antonette",
-        email:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore odit laudantium rem sequi eum impedit recusandae debitis, consectetur non expedita obcaecati suscipit. Dolorum, harum sapiente ea dicta, aut mollitia, nobis provident corporis cum itaque aliquam magnam deserunt totam laboriosam voluptate. Vel, molestias ipsum! Pariatur assumenda nesciunt corporis rem incidunt odio sapiente saepe explicabo corrupti iusto vero, dolore placeat molestias accusamus.",
-        website: "anastasia.net",
-      },
-      {
-        id: 356,
-        name: "Clementine Bauch",
-        username: "Samantha",
-        email:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore odit laudantium rem sequi eum impedit recusandae debitis, consectetur non expedita obcaecati suscipit. Dolorum, harum sapiente ea dicta, aut mollitia, nobis provident corporis cum itaque aliquam magnam deserunt totam laboriosam voluptate. Vel, molestias ipsum! Pariatur assumenda nesciunt corporis rem incidunt odio sapiente saepe explicabo corrupti iusto vero, dolore placeat molestias accusamus.",
-        website: "ramiro.info",
-      },
-      {
-        id: 412,
-        name: "Patricia Lebsack",
-        username: "Karianne",
-        email: "Julianne.OConner@kory.org",
-        website: "kale.biz",
-      },
-      {
-        id: 53,
-        name: "Chelsey Dietrich",
-        username: "Kamren",
-        email: "Lucio_Hettinger@annie.ca",
-        website: "demarco.info",
-      },
-      {
-        id: 62,
-        name: "Mrs. Dennis Schulist",
-        username: "Leopoldo_Corkery",
-        email: "Karley_Dach@jasper.info",
-        website: "ola.org",
-      },
-      {
-        id: 71,
-        name: "Kurtis Weissnat",
-        username: "Elwyn.Skiles",
-        email: "Telly.Hoeger@billy.biz",
-        website: "elvis.io",
-      },
-      {
-        id: 867,
-        name: "Nicholas Runolfsdottir V",
-        username: "Maxime_Nienow",
-        email: "Sherwood@rosamond.me",
-        website: "jacynthe.com",
-      },
-      {
-        id: 91,
-        name: "Glenna Reichert",
-        username: "Delphine",
-        email: "Chaim_McDermott@dana.io",
-        website: "conrad.com",
-      },
-      {
-        id: 100,
-        name: "Clementina DuBuque",
-        username: "Moriah.Stanton",
-        email: "Rey.Padberg@karina.biz",
-        website: "ambrose.net",
-      },
-    ],
+    
   }),
   methods: {
     edit() {
       console.log("edit");
       this.taskEditing = false;
     },
-    approve(){
-      console.log("onaylandı")
+    approve(task){
+      //console.log("onaylandı " + e)
+      this.$store.dispatch("updateTask",task)
     },
     meeting(){
       console.log("görüşme talebi yollandı")
     }
   },
+  computed:{
+    getTask(){
+      return this.$store.getters.getTaskList
+    }
+      
+  }
 };
 </script>
 
