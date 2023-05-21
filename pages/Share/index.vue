@@ -7,26 +7,13 @@
     </div>
     <div class="center content-inputs mt-4 w-100">
       <client-only placeholder="Today's tasks">
-        <ckeditor-nuxt
-          v-if="!mytasks[0].task"
-          v-model="task"
-          :config="editorConfig"
-        />
-        <ckeditor-nuxt
-          v-if="mytasks[0].task"
-          v-model="mytasks[0].task"
-          :config="editorConfig"
-        />
+        <ckeditor-nuxt v-model="task" :config="editorConfig" />
       </client-only>
-      <vs-button
-        :disabled="mytasks[0].task"
-        class="float-end mt-2"
-        @click="shareTask"
-      >
+      <vs-button :disabled="mytask" class="float-end mt-2" @click="shareTask">
         Paylaş
       </vs-button>
       <vs-button
-        :disabled="!mytasks[0].task"
+        :disabled="!mytask || mytask.status == true"
         success
         class="float-end mt-2"
         @click="edittedTask"
@@ -37,21 +24,16 @@
 
     <div class="vstable center">
       <vs-table>
-        <template #tbody>
-          <vs-tr
-            class="text-break"
-            :key="i"
-            v-for="(tr, i) in mytasks"
-            :data="tr"
-          >
-            <vs-td>
+        <template v-if="mytask != null" #tbody>
+          <vs-tr class="text-break">
+            <vs-td class="w-100">
               <vs-alert warn>
-                {{ strip_tags(tr.task) }}
+                {{ strip_tags(mytask.text) }}
               </vs-alert>
             </vs-td>
             <vs-td>
               <vs-button
-                v-if="tr.status == true"
+                v-if="mytask.status == true"
                 style="width: 100px"
                 success
                 flat
@@ -66,7 +48,7 @@
             </vs-td>
           </vs-tr>
         </template>
-        <template #notFound>
+        <template v-if="mytask == null" #notFound>
           <vs-alert warn> Henüz bir taskınız yok </vs-alert>
         </template>
       </vs-table>
@@ -102,24 +84,48 @@ export default {
       removePlugins: ["Title"],
     },
     task: "",
-    mytasks: [
-      {
-        id: 1,
-        task: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Mollitia recusandae iusto soluta nulla quisquam. Hic exercitationem veritatis temporibus voluptates repellendus, incidunt nemo totam molestias neque inventore et nesciunt optio doloribus dolore quia pariatur obcaecati deserunt dolorum laudantium error sequi vitae!adipisicing elit. Mollitia recusandae iusto soluta nulla quisquam. Hic exercitationem veritatis temporibus voluptates repellendus, incidunt nemo totam molestias neque inventore et nesciunt optio doloribus dolore quia pariatur obcaecati deserunt dolorum laudantium error sequi vitae!",
-        status: false,
-      },
-    ],
   }),
   methods: {
     shareTask() {
-      console.log("task paylaşıldı");
+      if (this.task.length <= 0) {
+        this.$toast.error('Lütfen bir görev ekleyin')
+      } else {
+        const task = {
+          name: JSON.parse(localStorage.getItem("user")).name,
+          text: this.task,
+          status: false,
+        };
+        this.$store.dispatch("addTask", task);
+        this.$toast.success('Görev Paylaşıldı')
+      }
     },
-    edittedTask(){
-      console.log("task düzenlendi");
+    edittedTask() {
+      if (this.task.length <= 0) {
+        this.$toast.error('Lütfen bir görev ekleyin')
+      } else {
+        const task = {
+          _id: this.mytask._id,
+          name: this.mytask.name,
+          text: this.task,
+        };
+        this.$store.dispatch("updateTaskText", task);
+        this.$toast.success('Görev Düzenlendi')
+      }
     },
     //ckeditörden gelen html taglarını temizleme
     strip_tags(remove) {
       return remove.replace(/(<([^>]+)>)/gi, "");
+    },
+  },
+  computed: {
+    mytask() {
+      if (process.client) {
+        const tasks = this.$store.getters.getTaskList;
+        const mytask = tasks.find(
+          (task) => task.name == JSON.parse(localStorage.getItem("user")).name
+        );
+        return mytask || null;
+      }
     },
   },
 };

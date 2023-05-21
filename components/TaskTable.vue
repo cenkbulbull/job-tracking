@@ -1,12 +1,14 @@
  <template>
   <div class="center ms-5">
-    <vs-table striped >
+    <vs-table striped>
       <template #thead>
         <vs-tr class="d-flex align-items-center bg-light">
           <vs-row :w="12">
             <vs-col :w="2"><vs-th>Durum</vs-th></vs-col>
             <vs-col :w="2"><vs-th>İsim</vs-th></vs-col>
-            <vs-col :w="7"><vs-th style="width: 150px">İş Tanımı</vs-th></vs-col>
+            <vs-col :w="7"
+              ><vs-th style="width: 150px">İş Tanımı</vs-th></vs-col
+            >
             <vs-col :w="1"><vs-th> </vs-th></vs-col>
           </vs-row>
         </vs-tr>
@@ -21,7 +23,13 @@
           <vs-row :w="12">
             <vs-col :w="2">
               <vs-td>
-                <div style="width:100px;" class="alert text-center" :class="tr.status ? 'alert-success': 'alert-danger'"><b>{{ tr.status ? "Onaylandı" : "Bekliyor" }}</b></div>
+                <div
+                  style="width: 100px"
+                  class="alert text-center"
+                  :class="tr.status ? 'alert-success' : 'alert-danger'"
+                >
+                  <b>{{ tr.status ? "Onaylandı" : "Bekliyor" }}</b>
+                </div>
               </vs-td>
             </vs-col>
             <vs-col :w="2">
@@ -31,13 +39,17 @@
             </vs-col>
             <vs-col :w="7">
               <vs-td>
-                {{ tr.text }}
+                {{ strip_tags(tr.text) }}
               </vs-td>
             </vs-col>
             <vs-col :w="1">
               <vs-td>
                 <vs-td>
-                  <vs-button :flat="tr.status" @click="approve(getTask[i])" success icon
+                  <vs-button
+                    :flat="tr.status"
+                    @click="approve(getTask[i])"
+                    success
+                    icon
                     ><svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -53,7 +65,7 @@
                         d="M19.221 10.803 12 10V4a2 2 0 0 0-4 0v12l-3.031-1.212a2 2 0 0 0-2.64 1.225l-.113.34a.998.998 0 0 0 .309 1.084l5.197 4.332c.179.149.406.231.64.231H19a2 2 0 0 0 2-2v-7.21a2 2 0 0 0-1.779-1.987z"
                       ></path></svg
                   ></vs-button>
-                  <vs-button @click="meeting" icon>
+                  <vs-button @click="meeting(getTask[i])" icon>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -78,6 +90,7 @@
                     @click="
                       taskEditing = !taskEditing;
                       editedUser = tr.name;
+                      editedId = tr._id
                     "
                     ><svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -123,7 +136,7 @@
 
             <template #footer>
               <div class="con-footer">
-                <vs-button @click="edit" transparent> Ok </vs-button>
+                <vs-button @click="edit(editedId)" transparent> Ok </vs-button>
                 <vs-button @click="taskEditing = false" dark transparent>
                   Cancel
                 </vs-button>
@@ -158,32 +171,59 @@ export default {
     //table
     page: 1,
     max: 3,
-    //table 
+    //table
     taskEditing: false,
     editingInput: "",
     editedUser: null,
-
-    
+    editedId:null
   }),
   methods: {
-    edit() {
-      console.log("edit");
+    //ckeditörden gelen html taglarını temizleme
+    strip_tags(remove) {
+      return remove.replace(/(<([^>]+)>)/gi, "");
+    },
+    edit(_id) {
       this.taskEditing = false;
+      const text = this.editingInput
+      this.$store.dispatch("updateTaskText",{_id,text})
     },
-    approve(task){
+    approve(task) {
       //console.log("onaylandı " + e)
-      this.$store.dispatch("updateTask",task)
+      this.$store.dispatch("updateTaskStatus", task);
     },
-    meeting(){
-      console.log("görüşme talebi yollandı")
+    async meeting(usertask) {
+      const idData = await this.getUser.find((user) => {
+        return user.name == usertask.name;
+      });
+
+      const Meeting = {
+        name: usertask.name,
+        userId: idData._id,
+        meetings: [
+          {
+            senderid: JSON.parse(localStorage.getItem("user"))._id,
+            sendername: JSON.parse(localStorage.getItem("user")).name,
+            status: false,
+          },
+        ],
+      };
+      this.$store.dispatch("addMeetings", Meeting);
+    },
+  },
+  computed: {
+    getTask() {
+      return this.$store.getters.getTaskList;
+    },
+    getUser() {
+      return this.$store.getters.getUserList;
     }
   },
-  computed:{
-    getTask(){
-      return this.$store.getters.getTaskList
+  created() {
+    if (process.client) {
+      const lsId = JSON.parse(localStorage.getItem("user"))._id;
+      this.$store.dispatch("setMyMeetingsActions", lsId);
     }
-      
-  }
+  },
 };
 </script>
 

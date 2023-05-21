@@ -32,7 +32,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/vuesax'
+    '@/plugins/vuesax',
   ],
   /*
   ** Nuxt.js dev-modules
@@ -45,7 +45,11 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    '@nuxtjs/toast',
   ],
+  toast: {
+    duration: 2000,
+  },
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
@@ -60,10 +64,10 @@ export default {
     /*
     ** You can extend webpack config here
     */
-    extend (config, ctx) {
+    extend(config, ctx) {
     }
   },
-  serverMiddleware:[
+  serverMiddleware: [
     bodyParser.json(),
     "~/api"
   ]

@@ -8,6 +8,7 @@ const db = require('./helper/db.js')();
 const User = require("./models/User")
 const Task = require("./models/Task")
 const Code = require("./models/Code")
+const Meeting = require("./models/Meeting")
 
 //USERS
 app.get("/users", (req, res,next) => {
@@ -20,18 +21,6 @@ app.get("/users", (req, res,next) => {
     }).catch((err)=>{
       res.json(err.message)
     })
-})
-
-app.post("/user", (req, res) => {
-   
-})
-
-app.delete("/user", (req, res) => {
-
-})
-
-app.put("/user", (req, res) => {
-
 })
 
 //TASKS
@@ -58,6 +47,20 @@ app.post("/tasks", (req, res) => {
   })  
 })
 
+//sadece text
+app.put("/tasksText/:taskid",(req,res,next)=>{
+
+  const promise = Task.findOneAndUpdate({ _id: req.params.taskid },{ text: req.body.text },{ new: true } /* Güncellenen veriyi döndüren seçenek*/)
+
+  promise.then((data)=>{
+    res.json(data)
+  }).catch((err)=>{
+    res.json(err)
+  })
+  
+})
+
+//sadece status
 app.put("/tasks/:taskid",(req,res,next)=>{
 
   const promise = Task.findOneAndUpdate({ _id: req.params.taskid },{ status: req.body.status },{ new: true } /* Güncellenen veriyi döndüren seçenek*/)
@@ -69,6 +72,7 @@ app.put("/tasks/:taskid",(req,res,next)=>{
   })
   
 })
+
 
 
 //CODES
@@ -95,6 +99,44 @@ app.post("/codes", (req, res) => {
   })  
 })
 
+//MEETİNGS
+app.get("/meetings/:userid", (req, res,next) => {
+  const promise = Meeting.find({userId:req.params.userid})
+  promise.then((data)=>{
+    if (!data) {
+      next({message: "Meeting yok"})
+    }
+    res.json(data)
+  }).catch((err)=>{
+    res.json(err.message)
+  })
+})
+
+app.put("/meetings/:userid", (req, res) => {
+  const senderid = req.body.meetings[0].senderid
+  const sendername = req.body.meetings[0].sendername
+  const status = req.body.meetings[0].status
+  
+  const promise = Meeting.findOneAndUpdate({ userId:req.params.userid },{name:req.body.name, userId:req.body.userId, $push: { meetings: {senderid:senderid,sendername:sendername,status:status} } },{ new: true,upsert:true })
+
+  promise.then((data)=>{
+    res.json(data)
+  }).catch((err)=>{
+    res.json(err)
+  })
+})
+
+//delete okunan görüşmeleri silme
+app.put("/deleteMeeting/:userid/:senderid",(req,res,next)=>{
+
+  const promise = Meeting.findOneAndUpdate({userId:req.params.userid},{ $pull: { meetings: { senderid: req.params.senderid } } },{ new: true })
+
+  promise.then((data)=>{
+    res.json(data)
+  }).catch((err)=>{
+    res.json(err)
+  })
+})
 
 module.exports = {
     path: "/api",

@@ -29,12 +29,16 @@
         </template>
       </vs-sidebar-item>
 
-      <template #footer>
+      <template v-if="myMeetings" #footer>
         <vs-row justify="space-between">
           <vs-avatar badge-color="danger" badge-position="top-right">
-            <i class="bx bx-bell"></i>
-
-            <template #badge> 28 </template>
+            <i
+              @click="openNotification(myMeetings.meetings)"
+              class="bx bx-bell"
+            ></i>
+            <template v-if="myMeetings.meetings.length > 0" #badge>{{
+              myMeetings.meetings.length
+            }}</template>
           </vs-avatar>
         </vs-row>
       </template>
@@ -46,30 +50,56 @@ export default {
   data: () => ({
     active: "Home",
   }),
-  mounted(){
+  mounted() {
     //route değişiminde active datasınında değişmesini tetiklemek START
-    if(this.$route.name != this.active && this.$route.name != "index" ){
-      this.active = this.$route.name
-    }else{
-      this.active = "Home"
+    if (this.$route.name != this.active && this.$route.name != "index") {
+      this.active = this.$route.name;
+    } else {
+      this.active = "Home";
     }
     //route değişiminde active datasınında değişmesini tetiklemek FINISH
   },
   watch: {
     //active datasının değişimine göre yönlendirme START
     active: function (route) {
-      if(route == "Home"){
-        this.$router.push("/")
-        return
+      if (route == "Home") {
+        this.$router.push("/");
+        return;
       }
-      this.$router.push(route)
+      this.$router.push(route);
       //active datasının değişimine göre yönlendirme FINISH
+    },
+  },
+  computed: {
+    myMeetings() {
+      return this.$store.getters.getMyMeetings;
+    },
+  },
+  methods: {
+    openNotification(meetings) {
+      //console.log(meetings);
+      meetings.forEach((meeting) => {
+        const noti = this.$vs.notification({
+          icon: `<i class='bx bx-show'></i>`,
+          color: "#7d33ff",
+          duration: "none",
+          progress: "auto",
+          text: `<b>${meeting.sendername}</b> adlı kişiden yüzyüze görüşme talebi geldi, bu bildirimi kapatabilirsiniz.`,
+        });
+
+        if(process.client) {
+          const lsId = JSON.parse(localStorage.getItem("user"))._id;
+          const senderid = meeting.senderid;
+          this.$store.dispatch("deleteMeetingsActions", { lsId, senderid });
+        }
+
+      });
     },
   },
 };
 </script>
 <style scoped>
-  .sidebar{
-    position: fixed !important;
-  }
+.sidebar {
+  position: fixed !important;
+}
 </style>

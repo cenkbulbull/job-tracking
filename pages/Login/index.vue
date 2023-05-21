@@ -3,6 +3,7 @@
     <div class="row">
       <div class="center content-inputs col-4 mx-auto mt-5">
         <vs-input
+          class="mb-3"
           color="#7d33ff"
           border
           shadow
@@ -12,10 +13,11 @@
           <template #icon>
             <i class="bx bx-user"></i>
           </template>
-          <template #message-danger> Required </template>
+          <!--<template #message-danger> Required </template>-->
         </vs-input>
 
         <vs-input
+          class="mb-3"
           color="#7d33ff"
           border
           shadow
@@ -26,7 +28,7 @@
           <template #icon>
             <i class="bx bx-lock-open-alt"></i>
           </template>
-          <template #message-danger> Required </template>
+          <!--<template #message-danger> Required </template>-->
         </vs-input>
 
         <div class="row">
@@ -40,7 +42,7 @@
                 <vs-option label="Database" value="database">
                   Database
                 </vs-option>
-                <template #message-danger> Required </template>
+                <!--<template #message-danger> Required </template>-->
               </vs-select>
             </div>
           </div>
@@ -49,13 +51,13 @@
               <vs-select
                 color="success"
                 placeholder="Ünvan"
-                v-model="authority"
+                v-model="degree"
               >
                 <vs-option label="Koç" value="koc"> Takım Lideri </vs-option>
                 <vs-option label="Geliştirici" value="gelistirici">
                   Geliştirici
                 </vs-option>
-                <template #message-danger> Required </template>
+                <!--<template #message-danger> Required </template>-->
               </vs-select>
             </div>
           </div>
@@ -131,7 +133,7 @@ export default {
     namesurname: "",
     password: "",
     team: "",
-    authority: "",
+    degree: "",
     /*popup start */
     report: false,
     email: "",
@@ -145,8 +147,16 @@ export default {
     public_key: process.env.VUE_APP_PUBLICKEYEMAILJS,*/
   }),
   methods: {
-    signin() {
-      console.log("giriş");
+    async signin() {
+      //console.log("giriş");
+      const loggedUser = {
+        name:this.namesurname,
+        password:this.password,
+        team:this.team,
+        degree:this.degree
+      }
+      await this.$store.dispatch("login",loggedUser)
+      this.$router.push("/")
     },
     async sendReport() {
       this.btnReport = true; //tıklanma durumunda buton loading oluyor
