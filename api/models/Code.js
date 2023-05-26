@@ -5,7 +5,7 @@ const CodeSchema = new Schema({
     name:String,
     text:String,
     images:Array,
-    documents:Array,
+    //documents:Array,
     answers:Array
 })
 

@@ -8,44 +8,61 @@
           </h6>
         </vs-alert>
       </div>
-      <div class="center content-inputs mt-4 w-100">
-        <client-only placeholder="Today's tasks">
-          <ckeditor-nuxt v-model="errorText" :config="editorConfig" />
-        </client-only>
-        <vs-button class="float-end mt-2" @click="shareProblem"> Paylaş </vs-button>
-      </div>
-      <div>
-        <input
-          ref="file"
-          type="file"
-          style="display: none"
-          multiple
-          accept="image/*,.pdf"
-          @change="onChangeFile($event)"
-          class="form-control-file"
-        />
-        <vs-button success @click="$refs.file.click()" class="float-end">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            style="fill: rgba(250, 250, 250, 1); transform: ; msfilter: "
+      <form enctype="multipart/form-data">
+        <div class="center content-inputs mt-4 w-100">
+          <client-only placeholder="Today's tasks">
+            <ckeditor-nuxt v-model="error.errorText" :config="editorConfig" />
+          </client-only>
+          <vs-button
+            :disabled="getMyIssues.length >0"
+            class="float-end mt-2"
+            type="submit"
+            @click.prevent="shareProblem"
           >
-            <path
-              d="M19.903 8.586a.997.997 0 0 0-.196-.293l-6-6a.997.997 0 0 0-.293-.196c-.03-.014-.062-.022-.094-.033a.991.991 0 0 0-.259-.051C13.04 2.011 13.021 2 13 2H6c-1.103 0-2 .897-2 2v16c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V9c0-.021-.011-.04-.013-.062a.952.952 0 0 0-.051-.259c-.01-.032-.019-.063-.033-.093zM16.586 8H14V5.414L16.586 8zM6 20V4h6v5a1 1 0 0 0 1 1h5l.002 10H6z"
-            ></path>
-            <path d="M8 12h8v2H8zm0 4h8v2H8zm0-8h2v2H8z"></path>
-          </svg>
-        </vs-button>
-      </div>
+            Paylaş
+          </vs-button>
+        </div>
+        <div>
+          <input
+            ref="file"
+            type="file"
+            style="display: none"
+            multiple
+            accept="image/*"
+            @change="onChangeFile($event)"
+            class="form-control-file"
+          />
+          <vs-button
+            success
+            @click.prevent="$refs.file.click()"
+            class="float-end"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              style="fill: rgba(250, 250, 250, 1); transform: ; msfilter: "
+            >
+              <path
+                d="M19.903 8.586a.997.997 0 0 0-.196-.293l-6-6a.997.997 0 0 0-.293-.196c-.03-.014-.062-.022-.094-.033a.991.991 0 0 0-.259-.051C13.04 2.011 13.021 2 13 2H6c-1.103 0-2 .897-2 2v16c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V9c0-.021-.011-.04-.013-.062a.952.952 0 0 0-.051-.259c-.01-.032-.019-.063-.033-.093zM16.586 8H14V5.414L16.586 8zM6 20V4h6v5a1 1 0 0 0 1 1h5l.002 10H6z"
+              ></path>
+              <path d="M8 12h8v2H8zm0 4h8v2H8zm0-8h2v2H8z"></path>
+            </svg>
+          </vs-button>
+        </div>
+      </form>
     </div>
-    <div class="container float-end" style="width: 600px">
+    <div v-if="getMyIssues.length != 0" class="container float-end" style="width: 600px">
       <div class="mt-3">
         <vs-alert warn style="height: 270px" class="overflow-auto">
           <div>
             <h6 class="mt-2 d-inline">Çözümlenmeyen Problem</h6>
-            <vs-button @click="removeIssue" danger class="custom-vs-btn float-end">
+            <vs-button
+              @click="removeIssue"
+              danger
+              class="custom-vs-btn float-end"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -78,25 +95,12 @@
           <!-- ÇÖZÜMLENMEYEN PROBLEM İÇERİĞİ -->
           <div>
             <div class="mt-4">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati
-              iure facere fugit officia provident voluptatum reiciendis, fugiat
-              numquam veritatis quam corporis animi voluptas voluptate excepturi
-              unde dignissimos nobis exercitationem porro a aperiam. Consequatur
-              tempora dolore illum accusamus non illo, excepturi debitis fugit
-              soluta, beatae qui a reprehenderit suscipit. Voluptatem, dolore.
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odio
-              repellat cum libero laudantium totam expedita velit, ratione,
-              incidunt quia laborum, voluptatum dignissimos? Placeat,
-              exercitationem? Repellat consectetur officia perferendis quasi
-              sit?Lorem ipsum dolor sit, amet consectetur adipisicing elit. A,
-              explicabo! Lorem ipsum dolor sit amet consectetur adipisicing
-              elit. Deleniti quas debitis ea cum vel ratione ipsum consectetur
-              maxime placeat magni?
+              {{ strip_tags(getMyIssues[0].text) }}
             </div>
           </div>
           <!-- ÇÖZÜMLENMEYEN PROBLEM İÇERİĞİ -->
         </vs-alert>
-        <vs-button @click="downloadFiles" class="float-end">
+        <vs-button @click="downloadFiles(getMyIssues[0].images)" class="float-end">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="18"
@@ -132,20 +136,24 @@
 
     <div class="container mt-5 mb-3">
       <div class="row">
-        <div v-for="(i, keyindex) in 5" :key="keyindex" class="col-md-4">
+        <div
+          v-for="(issue, keyindex) in getIssues"
+          :key="keyindex"
+          class="col-md-4"
+        >
           <div class="card p-3 mb-2">
             <div class="d-flex justify-content-between">
               <div class="d-flex flex-row align-items-center">
                 <div class="icon"><i class="bx bxl-mailchimp"></i></div>
                 <div class="ms-2 c-details">
                   <h6 class="mb-0" style="font-size: 12px !important">
-                    Ad Soyad
+                    {{ issue.name }}
                   </h6>
                   <span>Paylaşılma tarihi</span>
                 </div>
               </div>
               <div class="d-flex">
-                <vs-button @click="downloadFiles">
+                <vs-button @click="downloadFiles(issue.images)">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="18"
@@ -163,7 +171,13 @@
                     ></path>
                   </svg>
                 </vs-button>
-                <vs-button success @click="problemAnswer = !problemAnswer">
+                <vs-button
+                  success
+                  @click="
+                    problemAnswer = !problemAnswer;
+                    problemOwner = issue.name;
+                  "
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="18"
@@ -185,66 +199,79 @@
                 </vs-button>
               </div>
             </div>
-            <div class="mt-3 lead">
+            <div class="mt-3 lead" style="height: 150px; overflow: auto">
               <p style="font-size: 12px !important">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Temporibus architecto vel deleniti eaque voluptates magni
-                corrupti dolor eum doloribus dolorum, error vero quidem,
-                deserunt aut officia, reprehenderit libero facilis est officiis!
-                Quisquam ratione, voluptatem quasi cupiditate praesentium
-                officia, molestiae corporis maiores sunt soluta esse harum,
-                temporibus aspernatur dolorum fuga? Eaque?
+                {{ strip_tags(issue.text) }}
               </p>
             </div>
             <div class="d-flex">
               <CoolLightBox
-                :items="issues[0].images"
+                v-if="problemOwner == issue.name"
+                :items="
+                  issue.images.map(
+                    (obj) => '/_nuxt/assets/images/uploads/' + obj.filename
+                  )
+                "
                 :index="index"
                 @close="index = null"
+                :useZoomBar="true"
+                :fullScreen="true"
               >
               </CoolLightBox>
 
               <div
                 class="image m-1"
-                v-for="(image, imageIndex) in issues[0].images"
+                v-for="(image, imageIndex) in issue.images"
                 :key="imageIndex"
-                @click="index = imageIndex"
-                :style="{ backgroundImage: `url(${image})` }"
+                @click="openLightbox(imageIndex, issue.name)"
+                :style="{
+                  'background-image': `url(${require('~/assets/images/uploads/' +
+                    image.filename)})`,
+                }"
               ></div>
             </div>
           </div>
+          <!-- popup start-->
+          <div class="center">
+            <vs-dialog
+              v-if="problemOwner == issue.name"
+              width="300px"
+              not-center
+              v-model="problemAnswer"
+            >
+              <template #header>
+                <h4 class="not-margin">{{ problemOwner }}</h4>
+              </template>
+
+              <div class="con-content">
+                <client-only placeholder="Today's tasks">
+                  <ckeditor-nuxt :config="editorConfig" v-model="answer" />
+                </client-only>
+              </div>
+
+              <template #footer>
+                <div class="con-footer">
+                  <vs-button @click="sendReply" transparent> Ok </vs-button>
+                  <vs-button
+                    @click="
+                      problemAnswer = false;
+                      answer = null;
+                    "
+                    dark
+                    transparent
+                  >
+                    Cancel
+                  </vs-button>
+                </div>
+              </template>
+            </vs-dialog>
+          </div>
+          <!-- popup finish-->
         </div>
       </div>
     </div>
 
     <!-- Diğer kullanıcıların paylaştıkları -->
-
-    <!-- popup start-->
-    <div class="center">
-      <vs-dialog width="300px" not-center v-model="problemAnswer">
-        <template #header>
-          <h4 class="not-margin">Sorunun sahibi</h4>
-        </template>
-
-        <div class="con-content">
-          <client-only placeholder="Today's tasks">
-            <ckeditor-nuxt :config="editorConfig" />
-          </client-only>
-        </div>
-
-        <template #footer>
-          <div class="con-footer">
-            <vs-button @click="sendReply" transparent>
-              Ok
-            </vs-button>
-            <vs-button @click="problemAnswer = false" dark transparent>
-              Cancel
-            </vs-button>
-          </div>
-        </template>
-      </vs-dialog>
-    </div>
-    <!-- popup finish-->
   </div>
 </template>
   <script>
@@ -279,62 +306,95 @@ export default {
       ],
       removePlugins: ["Title"],
     },
-    errorText: "",
-    errorFile: [],
-    myError: [
-      {
-        id: 1,
-        error:
-          "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Mollitia recusandae iusto soluta nulla quisquam. Hic exercitationem veritatis temporibus voluptates repellendus, incidunt nemo totam molestias neque inventore et nesciunt optio doloribus dolore quia pariatur obcaecati deserunt dolorum laudantium error sequi vitae!adipisicing elit. Mollitia recusandae iusto soluta nulla quisquam. Hic exercitationem veritatis temporibus voluptates repellendus, incidunt nemo totam molestias neque inventore et nesciunt optio doloribus dolore quia pariatur obcaecati deserunt dolorum laudantium error sequi vitae!",
-        file: ["a", "b"],
-      },
-    ],
-    issues: [
-      {
-        id: 1,
-        name: "ss",
-        text: "lorem döfdsfdsf",
-        images: [
-          "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg",
-          "https://static.toiimg.com/photo/72975551.cms",
-        ],
-      },
-    ],
-    /*images: [
-      "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg",
-      "https://static.toiimg.com/photo/72975551.cms",
-    ],*/
+    error: {
+      errorText: "",
+      errorFiles: [],
+    },
     index: null,
+
     problemAnswer: null,
+    problemOwner: null,
+    answer: null,
   }),
   methods: {
+    //ckeditörden gelen html taglarını temizleme
+    strip_tags(remove) {
+      return remove.replace(/(<([^>]+)>)/gi, "");
+    },
     onChangeFile(e) {
-      //console.log(e)
-      const file = e.target.files[0];
-      this.selectedImage = URL.createObjectURL(file);
-      console.log(this.selectedImage);
+      const selectedFile = e.target.files;
+      this.error.errorFiles = selectedFile;
     },
-    shareProblem(){
-      console.log("sorun paylaşıldı")
-    },
-    removeIssue(){
-      console.log("sorununuz silindi")
-    },
-    seeSolutions(){
-      //console.log("sorunları gör")
-      this.$router.push("Code/Answer")
-    },
-    downloadFiles(){
-      console.log("dosyalar indiriliyor")
-    },
-    seePictures(){
-      console.log("resimleri gör")
-    },
-    sendReply(){
-      console.log("cevap gönderildi")
-      this.problemAnswer = false
-    }
+    async shareProblem() {
+      const formData = new FormData();
 
+      for (let i = 0; i < this.error.errorFiles.length; i++) {
+        formData.append("file", this.error.errorFiles[i]);
+      }
+      formData.append("text", this.error.errorText);
+
+      await this.$store.dispatch("addCode", {
+        formData,
+        name: JSON.parse(localStorage.getItem("user")).name,
+      });
+
+      this.$toast.success('Sorununuz Paylaşıldı')
+    },
+    async removeIssue() {
+      await this.$store.dispatch("removeIssue");
+      this.$toast.error('Sorununuz Silindi')
+    },
+    seeSolutions() {
+      this.$router.push("Code/Answer");
+    },
+    downloadFiles(images) {
+      let query = ""
+      images.forEach(image => {
+        console.log(image.filename)
+        query+=image.filename+"&"
+      });
+      let newQuery = query.slice(0,query.length -1)
+      console.log(newQuery)
+      window.open("http://localhost:3000/api/download/"+newQuery) //axiosla istek çalışmıyor, bu şekilde get isteği atıyorum
+    },
+    seePictures() {
+      console.log("resimleri gör");
+    },
+    async sendReply() {
+      const answer = {
+        problemOwner: this.problemOwner,
+        senderName: JSON.parse(localStorage.getItem("user")).name,
+        answer: this.answer,
+      };
+      await this.$store.dispatch("problemAnswer", answer);
+      this.problemAnswer = false;
+      this.answer = null;
+    },
+    openLightbox(imageIndex, issueName) {
+      const self = this
+      const promise = function () {  //önce problemownerin dolması gerekiyor, aksi durumuda hata veriyor, bu yüzden promise tanımlandı
+        return new Promise((resolve, reject) => {
+          self.problemOwner = issueName;
+          resolve("İşlem tamamlandı.");
+        });
+      };
+
+      promise().then(()=>{
+        this.index = imageIndex;
+      })  
+      /*this.problemOwner = issueName;
+      setTimeout(() => {
+        this.index = imageIndex;
+      }, 1);*/
+    },
+  },
+  computed: {
+    getIssues() {
+      return this.$store.getters.getIssuesList;
+    },
+    getMyIssues() {
+      return this.$store.getters.getMyIssues;
+    },
   },
 };
 </script>

@@ -11,7 +11,10 @@ const createStore = () => {
       },
       userList: [],
       taskList: [],
-      myMeetings:null
+      myMeetings: null,
+      issuesList: [],
+      myIssues: null
+
     }),
     getters: {
       isAuthenticated(state) {
@@ -25,6 +28,12 @@ const createStore = () => {
       },
       getMyMeetings(state) {
         return state.myMeetings
+      },
+      getIssuesList(state) {
+        return state.issuesList
+      },
+      getMyIssues(state) {
+        return state.myIssues
       }
     },
     mutations: {
@@ -52,8 +61,14 @@ const createStore = () => {
       setMyMeetings(state, meetings) {
         state.myMeetings = meetings[0]
       },
-      setMyDeletedMeetings(state,meetings){
+      setMyDeletedMeetings(state, meetings) {
         state.myMeetings = meetings
+      },
+      setIssuesList(state, issues) {
+        state.issuesList = issues
+      },
+      setMyIssues(state, myissues) {
+        state.myIssues = myissues
       }
     },
     actions: {
@@ -76,6 +91,18 @@ const createStore = () => {
               userList.push(user)
             });
             vuexContext.commit("setUserList", userList)
+          })
+
+        //sorunlar çekilecek
+        await this.$axios.get("/codes")
+          .then((res) => {
+            vuexContext.commit("setIssuesList", res.data)
+          })
+
+        //giriş yapan kullanıcının sorunları
+        await this.$axios.get("/codes/" + vuexContext.state.loggedInUser.name)
+          .then((res) => {
+            vuexContext.commit("setMyIssues", res.data)
           })
       },
       async login(vuexContext, user) {
@@ -108,23 +135,64 @@ const createStore = () => {
           })
       },
       //giriş yapan kullanıcının görüşme istekleri
-      async setMyMeetingsActions (vuexContext,lsId) {
+      async setMyMeetingsActions(vuexContext, lsId) {
         await this.$axios.get("/meetings/" + lsId)
           .then((res) => {
-            vuexContext.commit("setMyMeetings", {...res.data})
+            vuexContext.commit("setMyMeetings", { ...res.data })
           })
       },
-      async addMeetings (vuexContext,meeting) {
-        await this.$axios.put("/meetings/"+ meeting.userId,meeting)
+      async addMeetings(vuexContext, meeting) {
+        await this.$axios.put("/meetings/" + meeting.userId, meeting)
       },
       //giriş yapan kullanıcının silinme durumuna göre meetings güncellenmesi
-      async deleteMeetingsActions (vuexContext,context) {
+      async deleteMeetingsActions(vuexContext, context) {
         //console.log(context)
-        await this.$axios.put("/deleteMeeting/"+context.lsId+"/"+context.senderid)
+        await this.$axios.put("/deleteMeeting/" + context.lsId + "/" + context.senderid)
           .then((res) => {
             vuexContext.commit("setMyDeletedMeetings", res.data)
           })
       },
+      async addCode(vuexContext, context) {
+        await this.$axios.post("/codes/" + context.name, context.formData)
+          .then(async (res) => {
+            //console.log(res.data)
+            //sorun eklendikten sonra tüm sorun verilerinin çekilmesi
+            await this.$axios.get("/codes")
+              .then((res) => {
+                vuexContext.commit("setIssuesList", res.data)
+              })
+            //sorun eklendikten sonra giriş yapan kullanıcının verilerinin çekilmesi
+            await this.$axios.get("/codes/" + vuexContext.state.loggedInUser.name)
+              .then((res) => {
+                vuexContext.commit("setMyIssues", res.data)
+              })
+          })
+      },
+      async removeIssue(vuexContext, context) {
+        await this.$axios.delete("/codes/" + vuexContext.state.loggedInUser.name)
+          .then(async (res) => {
+            //sorun silindikten sonra tüm sorun verilerinin çekilmesi
+            await this.$axios.get("/codes")
+              .then((res) => {
+                vuexContext.commit("setIssuesList", res.data)
+              })
+            //sorun silindikten sonra giriş yapan kullanıcının verilerinin çekilmesi
+            await this.$axios.get("/codes/" + vuexContext.state.loggedInUser.name)
+              .then((res) => {
+                vuexContext.commit("setMyIssues", res.data)
+              })
+          })
+      },
+      async problemAnswer(vuexContext, context) {
+        await this.$axios.put("/codes/" + context.problemOwner, { name: context.senderName, text: context.answer })
+          .then((res) => {
+            //soruna cevap eklendikten sonra tüm sorun verilerinin çekilmesi
+            this.$axios.get("/codes")
+              .then((res) => {
+                vuexContext.commit("setIssuesList", res.data)
+              })
+          })
+      }
 
 
     }
