@@ -79,20 +79,28 @@ export default {
     openNotification(meetings) {
       //console.log(meetings);
       meetings.forEach((meeting) => {
-        const noti = this.$vs.notification({
-          icon: `<i class='bx bx-show'></i>`,
-          color: "#7d33ff",
-          duration: "none",
-          progress: "auto",
-          text: `<b>${meeting.sendername}</b> adlı kişiden yüzyüze görüşme talebi geldi, bu bildirimi kapatabilirsiniz.`,
-        });
-
-        if(process.client) {
+        if (meeting.status == true) {
+          const noti = this.$vs.notification({
+            icon: `<i class='bx bx-show'></i>`,
+            color: "success",
+            duration: "none",
+            progress: "auto",
+            text: `<b>${meeting.sendername}</b> adlı kişi sorununu çözdüğünüz için size TEŞEKKÜR EDİYOR, bu bildirimi kapatabilirsiniz.`,
+          });
+        }else{
+          const noti = this.$vs.notification({
+            icon: `<i class='bx bx-show'></i>`,
+            color: "#7d33ff",
+            duration: "none",
+            progress: "auto",
+            text: `<b>${meeting.sendername}</b> adlı kişiden YÜZYÜZE GÖRÜŞME TALEBİ geldi, bu bildirimi kapatabilirsiniz.`,
+          });
+        }
+        if (process.client) {
           const lsId = JSON.parse(localStorage.getItem("user"))._id;
           const senderid = meeting.senderid;
           this.$store.dispatch("deleteMeetingsActions", { lsId, senderid });
         }
-
       });
     },
   },

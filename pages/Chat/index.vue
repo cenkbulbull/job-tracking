@@ -559,18 +559,6 @@ export default {
   }
 }
 
-::-webkit-scrollbar {
-  width: 6px;
-  background-color: #eaeaea;
-  border-left: 1px solid #cecece;
-}
-::-webkit-scrollbar-thumb {
-  background-color: #47575e;
-}
-::-webkit-scrollbar-thumb:hover {
-  background-color: #39484f;
-}
-
 .form-control:focus {
   box-shadow: none;
 }

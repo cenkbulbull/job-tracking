@@ -75,7 +75,7 @@
                 ></path>
               </svg>
             </vs-button>
-            <vs-button @click="seeSolutions" class="custom-vs-btn float-end">
+            <NuxtLink to="/Code/Answer" tag="vs-button" class="custom-vs-btn float-end">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -90,7 +90,7 @@
                   d="M12 5c-7.633 0-9.927 6.617-9.948 6.684L1.946 12l.105.316C2.073 12.383 4.367 19 12 19s9.927-6.617 9.948-6.684l.106-.316-.105-.316C21.927 11.617 19.633 5 12 5zm0 12c-5.351 0-7.424-3.846-7.926-5C4.578 10.842 6.652 7 12 7c5.351 0 7.424 3.846 7.926 5-.504 1.158-2.578 5-7.926 5z"
                 ></path>
               </svg>
-            </vs-button>
+            </NuxtLink>
           </div>
           <!-- ÇÖZÜMLENMEYEN PROBLEM İÇERİĞİ -->
           <div>
@@ -114,7 +114,7 @@
             ></path>
           </svg>
         </vs-button>
-        <vs-button @click="seePictures" class="float-end">
+        <!--<vs-button @click="seePictures" class="float-end">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="18"
@@ -128,7 +128,7 @@
               d="M19.999 4h-16c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm-16 14V6h16l.002 12H3.999z"
             ></path>
           </svg>
-        </vs-button>
+        </vs-button>-->
       </div>
     </div>
     <div class="clearfix"></div>
@@ -344,21 +344,15 @@ export default {
       await this.$store.dispatch("removeIssue");
       this.$toast.error('Sorununuz Silindi')
     },
-    seeSolutions() {
-      this.$router.push("Code/Answer");
-    },
     downloadFiles(images) {
       let query = ""
       images.forEach(image => {
-        console.log(image.filename)
+        //console.log(image.filename)
         query+=image.filename+"&"
       });
       let newQuery = query.slice(0,query.length -1)
-      console.log(newQuery)
+      //console.log(newQuery)
       window.open("http://localhost:3000/api/download/"+newQuery) //axiosla istek çalışmıyor, bu şekilde get isteği atıyorum
-    },
-    seePictures() {
-      console.log("resimleri gör");
     },
     async sendReply() {
       const answer = {
