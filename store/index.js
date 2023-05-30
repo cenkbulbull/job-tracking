@@ -1,14 +1,16 @@
 import Vuex from "vuex"
+import Cookie from "js-cookie"
 
 const createStore = () => {
   return new Vuex.Store({
     state: () => ({
-      loggedInUser: {
+      /*loggedInUser: {
         name: "Cenk Bülbül",
         password: "Cenk123",
         team: "Frontend",
         degree: "Geliştirici"
-      },
+      },*/
+      loggedInUser: null,
       userList: [],
       taskList: [],
       myMeetings: null,
@@ -38,8 +40,19 @@ const createStore = () => {
     },
     mutations: {
       setLoggedUser(state, loggedUser) {
+
+        Cookie.set("authkey", loggedUser._id)
+
         state.loggedInUser = loggedUser
         localStorage.setItem("user", JSON.stringify(loggedUser))
+      },
+      setLoggedRefreshUser(state, loggedUser) {
+        state.loggedInUser = loggedUser
+      },
+      logout(state) {
+        state.loggedInUser = null
+        localStorage.removeItem("user")
+        Cookie.remove("authkey")
       },
       setUserList(state, users) { //sayfa yüklendiğinde userlist güncelleniyor
         state.userList = users
@@ -73,6 +86,23 @@ const createStore = () => {
     },
     actions: {
       async nuxtServerInit(vuexContext, context) {
+
+        let cookie = context.req.headers.cookie.split(";").find(c => c.trim().startsWith("authkey="))
+        if (cookie) {
+          cookie = cookie.split("=")[1]
+          console.log(cookie)
+
+          await this.$axios.get("/users")
+            .then((res) => {
+              res.data.forEach((user) => {
+                if (user._id == cookie) {
+                  vuexContext.commit("setLoggedRefreshUser", user)
+                }
+              });
+            })
+
+        }
+
         //görevler çekiliyor
         await this.$axios.get("/tasks")
           .then((res) => {
@@ -100,10 +130,12 @@ const createStore = () => {
           })
 
         //giriş yapan kullanıcının sorunları
-        await this.$axios.get("/codes/" + vuexContext.state.loggedInUser.name)
-          .then((res) => {
-            vuexContext.commit("setMyIssues", res.data)
-          })
+        if (vuexContext.state.loggedInUser != null) {
+          await this.$axios.get("/codes/" + vuexContext.state.loggedInUser.name)
+            .then((res) => {
+              vuexContext.commit("setMyIssues", res.data)
+            })
+        }
       },
       async login(vuexContext, user) {
         await this.$axios.get("/users")
@@ -111,6 +143,11 @@ const createStore = () => {
             res.data.forEach((resUser) => {
               if (user.name == resUser.name && user.password == resUser.password) {
                 vuexContext.commit("setLoggedUser", resUser)
+
+                this.$axios.get("/codes/" + vuexContext.state.loggedInUser.name)
+                  .then((res) => {
+                    vuexContext.commit("setMyIssues", res.data)
+                  })
               }
             })
           })

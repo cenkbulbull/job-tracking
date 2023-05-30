@@ -29,6 +29,12 @@
         </template>
       </vs-sidebar-item>
 
+      <vs-sidebar-item>
+        <template #icon>
+          <i @click="logout" class='bx bx-log-out me-1'></i>
+        </template>
+      </vs-sidebar-item>
+
       <template v-if="myMeetings" #footer>
         <vs-row justify="space-between">
           <vs-avatar badge-color="danger" badge-position="top-right">
@@ -103,6 +109,10 @@ export default {
         }
       });
     },
+    logout(){
+      this.$store.commit("logout")
+      this.$router.push("/login")
+    }
   },
 };
 </script>
