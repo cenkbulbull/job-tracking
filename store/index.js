@@ -141,7 +141,7 @@ const createStore = () => {
         await this.$axios.get("/users")
           .then((res) => {
             res.data.forEach((resUser) => {
-              if (user.name == resUser.name && user.password == resUser.password) {
+              if (user.name == resUser.name && user.password == resUser.password && user.team == resUser.team && user.degree == resUser.degree) {
                 vuexContext.commit("setLoggedUser", resUser)
 
                 this.$axios.get("/codes/" + vuexContext.state.loggedInUser.name)

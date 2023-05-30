@@ -2,7 +2,9 @@
   <div class="hidden">
     <vs-sidebar class="sidebar" absolute reduce v-model="active" open>
       <template #logo>
-        <!-- ...img logo -->
+        <vs-avatar size="40" badge badge-color="success" class="mb-0">
+        <img :src="$store.state.loggedInUser.degree ==`gelistirici` ? require(`@/assets/images/avatars/developer.png`) : require(`@/assets/images/avatars/coach.png`) ">
+      </vs-avatar>
       </template>
 
       <vs-sidebar-item id="Home">

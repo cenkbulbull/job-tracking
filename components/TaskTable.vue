@@ -42,7 +42,7 @@
                 {{ strip_tags(tr.text) }}
               </vs-td>
             </vs-col>
-            <vs-col :w="1">
+            <vs-col v-if="$store.state.loggedInUser.degree !='gelistirici'" :w="1">
               <vs-td>
                 <vs-td>
                   <vs-button

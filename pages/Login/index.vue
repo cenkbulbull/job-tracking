@@ -53,7 +53,7 @@
                 placeholder="Ünvan"
                 v-model="degree"
               >
-                <vs-option label="Koç" value="koc"> Takım Lideri </vs-option>
+                <vs-option label="Takım Lideri" value="koc"> Takım Lideri </vs-option>
                 <vs-option label="Geliştirici" value="gelistirici">
                   Geliştirici
                 </vs-option>
