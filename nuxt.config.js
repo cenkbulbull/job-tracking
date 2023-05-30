@@ -26,7 +26,7 @@ export default {
   css: [
     'vuesax/dist/vuesax.css',
     'bootstrap/dist/css/bootstrap.min.css',
-    'boxicons/css/boxicons.min.css'
+    'boxicons/css/boxicons.min.css',
   ],
   /*
   ** Plugins to load before mounting the App
@@ -46,6 +46,7 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/toast',
+    'vue-sweetalert2/nuxt'
   ],
   toast: {
     duration: 2000,

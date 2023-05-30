@@ -3,8 +3,14 @@
     <vs-sidebar class="sidebar" absolute reduce v-model="active" open>
       <template #logo>
         <vs-avatar size="40" badge badge-color="success" class="mb-0">
-        <img :src="$store.state.loggedInUser.degree ==`gelistirici` ? require(`@/assets/images/avatars/developer.png`) : require(`@/assets/images/avatars/coach.png`) ">
-      </vs-avatar>
+          <img
+            :src="
+              $store.state.loggedInUser.degree == `gelistirici`
+                ? require(`@/assets/images/avatars/developer.png`)
+                : require(`@/assets/images/avatars/coach.png`)
+            "
+          />
+        </vs-avatar>
       </template>
 
       <vs-sidebar-item id="Home">
@@ -33,7 +39,7 @@
 
       <vs-sidebar-item>
         <template #icon>
-          <i @click="logout" class='bx bx-log-out me-1'></i>
+          <i @click="logout" class="bx bx-log-out me-1"></i>
         </template>
       </vs-sidebar-item>
 
@@ -54,6 +60,7 @@
   </div>
 </template>
   <script>
+import Swal from "sweetalert2";
 export default {
   data: () => ({
     active: "Home",
@@ -95,7 +102,7 @@ export default {
             progress: "auto",
             text: `<b>${meeting.sendername}</b> adlı kişi sorununu çözdüğünüz için size TEŞEKKÜR EDİYOR, bu bildirimi kapatabilirsiniz.`,
           });
-        }else{
+        } else {
           const noti = this.$vs.notification({
             icon: `<i class='bx bx-show'></i>`,
             color: "#7d33ff",
@@ -111,10 +118,22 @@ export default {
         }
       });
     },
-    logout(){
-      this.$store.commit("logout")
-      this.$router.push("/login")
-    }
+    logout() {
+      Swal.fire({
+        title: "Çıkış yapılıyor",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#195bff",
+        confirmButtonText: "Çık",
+        cancelButtonText: "Kal",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$store.commit("logout");
+          this.$router.push("/login");
+        }
+      });
+    },
   },
 };
 </script>
