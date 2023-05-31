@@ -192,6 +192,7 @@
 </template>
 
 <script>
+
 export default {
   middleware: [],
   layout: "loggedIn",
@@ -316,7 +317,7 @@ export default {
     sendMessage(){
       console.log("mesaj gönder")
     }
-  },
+  }
 };
 </script>
 <style scoped>

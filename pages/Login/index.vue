@@ -48,12 +48,10 @@
           </div>
           <div class="col-6">
             <div class="center con-selects">
-              <vs-select
-                color="success"
-                placeholder="Ünvan"
-                v-model="degree"
-              >
-                <vs-option label="Takım Lideri" value="koc"> Takım Lideri </vs-option>
+              <vs-select color="success" placeholder="Ünvan" v-model="degree">
+                <vs-option label="Takım Lideri" value="koc">
+                  Takım Lideri
+                </vs-option>
                 <vs-option label="Geliştirici" value="gelistirici">
                   Geliştirici
                 </vs-option>
@@ -141,7 +139,7 @@ export default {
     message: "",
     btnReport: false,
     /*popup end */
-    
+
     /*service_id: process.env.VUE_APP_SERVICEIDEMAILJS,
     template_id: process.env.VUE_APP_TEMPLATEIDEMAILJS,
     public_key: process.env.VUE_APP_PUBLICKEYEMAILJS,*/
@@ -150,13 +148,13 @@ export default {
     async signin() {
       //console.log("giriş");
       const loggedUser = {
-        name:this.namesurname,
-        password:this.password,
-        team:this.team,
-        degree:this.degree
-      }
-      await this.$store.dispatch("login",loggedUser)
-      this.$router.push("/")
+        name: this.namesurname,
+        password: this.password,
+        team: this.team,
+        degree: this.degree,
+      };
+      await this.$store.dispatch("login", loggedUser);
+      this.$router.push("/");
     },
     async sendReport() {
       this.btnReport = true; //tıklanma durumunda buton loading oluyor

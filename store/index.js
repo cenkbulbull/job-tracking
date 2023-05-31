@@ -87,22 +87,26 @@ const createStore = () => {
     actions: {
       async nuxtServerInit(vuexContext, context) {
 
-        let cookie = context.req.headers.cookie.split(";").find(c => c.trim().startsWith("authkey="))
-        if (cookie) {
-          cookie = cookie.split("=")[1]
-          console.log(cookie)
+        if (context.req.headers.cookie){
+          let cookie = context.req.headers.cookie.split(";").find(c => c.trim().startsWith("authkey="))
 
-          await this.$axios.get("/users")
-            .then((res) => {
-              res.data.forEach((user) => {
-                if (user._id == cookie) {
-                  vuexContext.commit("setLoggedRefreshUser", user)
-                }
-              });
-            })
-
+          if (cookie) {
+            cookie = cookie.split("=")[1]
+            //console.log(cookie)
+  
+            await this.$axios.get("/users")
+              .then((res) => {
+                res.data.forEach((user) => {
+                  if (user._id == cookie) {
+                    vuexContext.commit("setLoggedRefreshUser", user)
+                  }
+                });
+              })
+  
+          }
+  
         }
-
+        
         //görevler çekiliyor
         await this.$axios.get("/tasks")
           .then((res) => {
