@@ -24,6 +24,7 @@ export default {
   ** Global CSS
   */
   css: [
+    '@/assets/css/main.css',
     'vuesax/dist/vuesax.css',
     'bootstrap/dist/css/bootstrap.min.css',
     'boxicons/css/boxicons.min.css',
