@@ -13,10 +13,11 @@ export default {
     Sidebar,
   },
   created() {
-    //meetings güncelleniyor
+    //meetings ve messages güncelleniyor
     if (process.client) {
       const lsId = JSON.parse(localStorage.getItem("user"))._id;
       this.$store.dispatch("setMyMeetingsActions", lsId);
+      this.$store.dispatch("setMyMessagesActions", lsId);
     }
   },
 };

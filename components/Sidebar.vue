@@ -43,7 +43,7 @@
         </template>
       </vs-sidebar-item>
 
-      <template v-if="myMeetings" #footer>
+      <!--<template v-if="myMeetings" #footer>
         <vs-row justify="space-between">
           <vs-avatar badge-color="danger" badge-position="top-right">
             <i
@@ -55,6 +55,48 @@
             }}</template>
           </vs-avatar>
         </vs-row>
+      </template>
+
+      <template v-if="myMessages">
+        <vs-row justify="space-between">
+          <vs-avatar badge-color="danger" badge-position="top-right">
+            <i
+              @click="openMessages(myMessages.messages)"
+              class="bx bx-message-square-dots"
+            ></i>
+            <template v-if="myMessages.messages.length > 0" #badge>{{
+              myMessages.messages.length
+            }}</template>
+          </vs-avatar>
+        </vs-row>
+      </template>-->
+
+      <template #footer>
+        <div class="d-flex flex-column">
+          <vs-row v-if="myMessages" justify="space-between" class="mb-1">
+            <vs-avatar badge-color="danger" badge-position="top-right">
+              <i
+                @click="openMessages(myMessages.messages)"
+                class="bx bx-message-square-dots"
+              ></i>
+              <template v-if="myMessages.messages.length > 0" #badge>{{
+                myMessages.messages.length
+              }}</template>
+            </vs-avatar>
+          </vs-row>
+
+          <vs-row v-if="myMeetings" justify="space-between">
+            <vs-avatar badge-color="danger" badge-position="top-right">
+              <i
+                @click="openNotification(myMeetings.meetings)"
+                class="bx bx-bell"
+              ></i>
+              <template v-if="myMeetings.meetings.length > 0" #badge>{{
+                myMeetings.meetings.length
+              }}</template>
+            </vs-avatar>
+          </vs-row>
+        </div>
       </template>
     </vs-sidebar>
   </div>
@@ -88,6 +130,9 @@ export default {
   computed: {
     myMeetings() {
       return this.$store.getters.getMyMeetings;
+    },
+    myMessages() {
+      return this.$store.getters.getMyMessages;
     },
   },
   methods: {
@@ -131,6 +176,23 @@ export default {
         if (result.isConfirmed) {
           this.$store.commit("logout");
           this.$router.push("/login");
+        }
+      });
+    },
+    openMessages(messages) {
+      //console.log(messages);
+      messages.forEach((message) => {
+        const noti = this.$vs.notification({
+          icon: `<i class='bx bx-message-square-dots' ></i>`,
+          color: "success",
+          duration: "none",
+          progress: "auto",
+          text: `<b>${message.sendername}</b> adlı kişiden mesaj, " ${message.message} " bu bildirimi kapatabilirsiniz.`,
+        });
+        if (process.client) {
+          const lsId = JSON.parse(localStorage.getItem("user"))._id;
+          const senderid = message.senderid;
+          this.$store.dispatch("deleteMessagesActions", { lsId, senderid });
         }
       });
     },

@@ -51,39 +51,6 @@
                     <h6 class="mt-3">{{ activeChatUser }}</h6>
                   </div>
                 </div>
-                <div class="col-lg-1 hidden-sm text-right">
-                  <input
-                    ref="file"
-                    type="file"
-                    style="display: none"
-                    @change="onChangeFile($event)"
-                    class="form-control-file"
-                  />
-
-                  <vs-button
-                    success
-                    :disabled="!activeChatUser"
-                    @click="$refs.file.click()"
-                    class="float-end"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      style="
-                        fill: rgba(250, 250, 250, 1);
-                        transform: ;
-                        msfilter: ;
-                      "
-                    >
-                      <path
-                        d="M19.903 8.586a.997.997 0 0 0-.196-.293l-6-6a.997.997 0 0 0-.293-.196c-.03-.014-.062-.022-.094-.033a.991.991 0 0 0-.259-.051C13.04 2.011 13.021 2 13 2H6c-1.103 0-2 .897-2 2v16c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V9c0-.021-.011-.04-.013-.062a.952.952 0 0 0-.051-.259c-.01-.032-.019-.063-.033-.093zM16.586 8H14V5.414L16.586 8zM6 20V4h6v5a1 1 0 0 0 1 1h5l.002 10H6z"
-                      ></path>
-                      <path d="M8 12h8v2H8zm0 4h8v2H8zm0-8h2v2H8z"></path>
-                    </svg>
-                  </vs-button>
-                </div>
 
                 <div class="col-lg-1 hidden-sm text-right">
                   <vs-button @click="meeting" :disabled="!activeChatUser" icon>
@@ -107,64 +74,13 @@
                     </svg>
                   </vs-button>
                 </div>
-              </div>
-            </div>
 
-            <div v-if="activeChatUser != null" class="chat-history">
-              <ul class="m-b-0">
-                <li class="clearfix">
-                  <div class="message other-message float-right">
-                    Hi Aiden, how are you? How is the project coming along?
-                  </div>
-                </li>
-                <li class="clearfix">
-                  <div class="message-data">
-                    <span class="message-data-time">10:12 AM, Today</span>
-                  </div>
-                  <div class="message my-message">Are we meeting today?</div>
-                </li>
-                <li class="clearfix">
-                  <div class="message-data">
-                    <span class="message-data-time">10:15 AM, Today</span>
-                  </div>
-                  <div class="message my-message">
-                    Project has been already finished and I have results to show
-                    you.
-                  </div>
-                </li>
-                <li class="clearfix">
-                  <div class="message-data">
-                    <span class="message-data-time">10:15 AM, Today</span>
-                  </div>
-                  <div class="message my-message">
-                    Project has been already finished and I have results to show
-                    you.
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div v-else style="height: 400px">
-              <vs-alert>
-                <h6 class="mt-2">Welcome to <b>TODAY CHAT</b></h6>
-                <p>
-                  Buradan ekip arkadaşlarına yada takım liderine mesaj
-                  yollayabilir, sorunlarını onlarla paylaşıp, projenin
-                  eksiklerini tamamlayabilirsin. Sağ üstteki icondan ise dosya
-                  yollayabilirsin. Başarılar :))
-                </p>
-              </vs-alert>
-            </div>
-
-            <div class="chat-message clearfix">
-              <div class="input-group mb-0">
-                <input
-                  :disabled="!activeChatUser"
-                  v-model="chatMessage"
-                  type="text"
-                  class="form-control"
-                />
-                <div class="input-group-prepend">
-                  <vs-button success :disabled="!activeChatUser" @click="sendMessage">
+                <div class="col-lg-1 hidden-sm text-right">
+                  <vs-button
+                    success
+                    :disabled="!activeChatUser"
+                    @click="sendMessage"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -184,6 +100,30 @@
                 </div>
               </div>
             </div>
+
+            <div v-if="activeChatUser != null" class="chat-history">
+              <div class="chat-message clearfix">
+                <div class="input-group mb-0">
+                  <textarea
+                    :disabled="!activeChatUser"
+                    v-model="chatMessage"
+                    type="text"
+                    rows="12"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+            </div>
+            <div v-else style="height: 400px">
+              <vs-alert>
+                <h6 class="mt-2">Welcome to <b>TODAY CHAT</b></h6>
+                <p>
+                  Buradan ekip arkadaşlarına yada takım liderine mesaj
+                  yollayabilir, sorunlarını onlarla paylaşıp, projenin
+                  eksiklerini tamamlayabilirsin. Başarılar :))
+                </p>
+              </vs-alert>
+            </div>
           </div>
         </div>
       </div>
@@ -192,7 +132,6 @@
 </template>
 
 <script>
-
 export default {
   middleware: [],
   layout: "loggedIn",
@@ -200,99 +139,8 @@ export default {
   data: () => ({
     activeChatUser: null,
     chatMessage: "",
-    selectedImage:null,
+    selectedImage: null,
     searchUser: "",
-    /*users: [
-      {
-        id: 1,
-        name: "Leanne Graham",
-        username: "Bret",
-        authority: "Geliştirici",
-        email:
-          "Sincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.bizSincere@april.biz",
-        website: "hildegard.org",
-      },
-      {
-        id: 2,
-        name: "Ervin Howell",
-        username: "Antonette",
-        authority: "Geliştirici",
-        email: "Shanna@melissa.tv",
-        website: "anastasia.net",
-      },
-      {
-        id: 3,
-        name: "Clementine Bauch",
-        username: "Samantha",
-        authority: "Geliştirici",
-        email: "Nathan@yesenia.net",
-        website: "ramiro.info",
-      },
-      {
-        id: 4,
-        name: "Patricia Lebsack",
-        username: "Karianne",
-        authority: "Geliştirici",
-        email: "Julianne.OConner@kory.org",
-        website: "kale.biz",
-      },
-      {
-        id: 5,
-        name: "Chelsey Dietrich",
-        username: "Kamren",
-        authority: "Geliştirici",
-        email: "Lucio_Hettinger@annie.ca",
-        website: "demarco.info",
-      },
-      {
-        id: 6,
-        name: "Mrs. Dennis Schulist",
-        username: "Leopoldo_Corkery",
-        authority: "Geliştirici",
-        email: "Karley_Dach@jasper.info",
-        website: "ola.org",
-      },
-      {
-        id: 7,
-        name: "Kurtis Weissnat",
-        username: "Elwyn.Skiles",
-        authority: "Geliştirici",
-        email: "Telly.Hoeger@billy.biz",
-        website: "elvis.io",
-      },
-      {
-        id: 8,
-        name: "Nicholas Runolfsdottir V",
-        username: "Maxime_Nienow",
-        authority: "Geliştirici",
-        email: "Sherwood@rosamond.me",
-        website: "jacynthe.com",
-      },
-      {
-        id: 9,
-        name: "Glenna Reichert",
-        username: "Delphine",
-        authority: "Geliştirici",
-        email: "Chaim_McDermott@dana.io",
-        website: "conrad.com",
-      },
-      {
-        id: 10,
-        name: "Clementina DuBuque",
-        username: "Moriah.Stanton",
-        authority: "Geliştirici",
-        email: "Rey.Padberg@karina.biz",
-        website: "ambrose.net",
-      },
-      {
-        id: 10,
-        name: "Lider John",
-        username: "John",
-        authority: "Takım Lideri",
-        email: "Rey.Padberg@karina.biz",
-        website: "ambrose.net",
-      },
-    ],*/
   }),
   computed: {
     filterUsers() {
@@ -300,24 +148,60 @@ export default {
         return item.name.match(this.searchUser);
       });
     },
-    getUser(){
-      return this.$store.getters.getUserList
-    }
+    getUser() {
+      return this.$store.getters.getUserList;
+    },
   },
   methods: {
-    onChangeFile(e) {
+    /*onChangeFile(e) {
       //console.log(e)
       const file = e.target.files[0];
       this.selectedImage = URL.createObjectURL(file);
       console.log(this.selectedImage)
+    },*/
+    async meeting() {
+      const idData = await this.getUser.find((user) => {
+        return user.name == this.activeChatUser;
+      });
+
+      const Meeting = {
+        name: this.activeChatUser,
+        userId: idData._id,
+        meetings: [
+          {
+            senderid: JSON.parse(localStorage.getItem("user"))._id,
+            sendername: JSON.parse(localStorage.getItem("user")).name,
+            status: false,
+          },
+        ],
+      };
+      this.$store.dispatch("addMeetings", Meeting);
     },
-    meeting(){
-      console.log("görüşme talebi yollandı")
+    async sendMessage() {
+      const idData = await this.getUser.find((user) => {
+        return user.name == this.activeChatUser;
+      });
+
+      if (this.chatMessage.length <= 0) {
+        this.$toast.error("Lütfen bir mesaj yazın");
+      } else {
+        const Message = {
+          name: this.activeChatUser,
+          userId: idData._id,
+          messages: [
+            {
+              senderid: JSON.parse(localStorage.getItem("user"))._id,
+              sendername: JSON.parse(localStorage.getItem("user")).name,
+              message: this.chatMessage,
+            },
+          ],
+        };
+        this.$store.dispatch("addMessages", Message);
+        this.$toast.success('Mesajınız Gönderildi')
+        this.chatMessage = "";
+      }
     },
-    sendMessage(){
-      console.log("mesaj gönder")
-    }
-  }
+  },
 };
 </script>
 <style scoped>

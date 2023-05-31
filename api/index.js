@@ -24,6 +24,7 @@ const User = require("./models/User")
 const Task = require("./models/Task")
 const Code = require("./models/Code")
 const Meeting = require("./models/Meeting")
+const Message = require("./models/Messages")
 
 //dosya indirme
 app.get('/download/:filenames', (req, res) => {
@@ -224,6 +225,47 @@ app.put("/deleteMeeting/:userid/:senderid", (req, res, next) => {
   })
 })
 
+
+
+
+//MESSAGES
+app.get("/messages/:userid", (req, res, next) => {
+  const promise = Message.find({ userId: req.params.userid })
+  promise.then((data) => {
+    if (!data) {
+      next({ message: "Message yok" })
+    }
+    res.json(data)
+  }).catch((err) => {
+    res.json(err.message)
+  })
+})
+
+app.put("/messages/:userid", (req, res) => {
+  const senderid = req.body.messages[0].senderid
+  const sendername = req.body.messages[0].sendername
+  const message = req.body.messages[0].message
+
+  const promise = Message.findOneAndUpdate({ userId: req.params.userid }, { name: req.body.name, userId: req.body.userId, $push: { messages: { senderid: senderid, sendername: sendername, message:message } } }, { new: true, upsert: true })
+
+  promise.then((data) => {
+    res.json(data)
+  }).catch((err) => {
+    res.json(err)
+  })
+})
+
+//delete okunan mesajları silme
+app.put("/deleteMessage/:userid/:senderid", (req, res, next) => {
+
+  const promise = Message.findOneAndUpdate({ userId: req.params.userid }, { $pull: { messages: { senderid: req.params.senderid } } }, { new: true })
+
+  promise.then((data) => {
+    res.json(data)
+  }).catch((err) => {
+    res.json(err)
+  })
+})
 module.exports = {
   path: "/api",
   handler: app

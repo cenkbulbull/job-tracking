@@ -15,7 +15,8 @@ const createStore = () => {
       taskList: [],
       myMeetings: null,
       issuesList: [],
-      myIssues: null
+      myIssues: null,
+      myMessages:null
 
     }),
     getters: {
@@ -36,7 +37,10 @@ const createStore = () => {
       },
       getMyIssues(state) {
         return state.myIssues
-      }
+      },
+      getMyMessages(state) {
+        return state.myMessages
+      },
     },
     mutations: {
       setLoggedUser(state, loggedUser) {
@@ -82,7 +86,13 @@ const createStore = () => {
       },
       setMyIssues(state, myissues) {
         state.myIssues = myissues
-      }
+      },
+      setMyMessages(state, messages) {
+        state.myMessages = messages[0]
+      },
+      setMyDeletedMessages(state, messages) {
+        state.myMessages = messages
+      },
     },
     actions: {
       async nuxtServerInit(vuexContext, context) {
@@ -233,7 +243,27 @@ const createStore = () => {
                 vuexContext.commit("setIssuesList", res.data)
               })
           })
-      }
+      },
+      async addMessages(vuexContext, message) {
+        await this.$axios.put("/messages/" + message.userId, message)
+      },
+
+      //giriş yapan kullanıcının mesajları
+      async setMyMessagesActions(vuexContext, lsId) {
+        await this.$axios.get("/messages/" + lsId)
+          .then((res) => {
+            vuexContext.commit("setMyMessages", { ...res.data })
+          })
+      },
+
+      //giriş yapan kullanıcının silinme durumuna göre messages güncellenmesi
+      async deleteMessagesActions(vuexContext, context) {
+        //console.log(context)
+        await this.$axios.put("/deleteMessage/" + context.lsId + "/" + context.senderid)
+          .then((res) => {
+            vuexContext.commit("setMyDeletedMessages", res.data)
+          })
+      },
 
 
     }
