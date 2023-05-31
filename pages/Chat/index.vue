@@ -24,7 +24,7 @@
                 class="clearfix"
                 :class="activeChatUser == user.name ? 'active' : ''"
               >
-                <div v-if="user.authority == 'Geliştirici'">
+                <div v-if="user.degree == 'gelistirici'">
                   <img
                     src="@/assets/images/avatars/developer.png"
                     alt="avatar"
@@ -201,7 +201,7 @@ export default {
     chatMessage: "",
     selectedImage:null,
     searchUser: "",
-    users: [
+    /*users: [
       {
         id: 1,
         name: "Leanne Graham",
@@ -291,14 +291,17 @@ export default {
         email: "Rey.Padberg@karina.biz",
         website: "ambrose.net",
       },
-    ],
+    ],*/
   }),
   computed: {
     filterUsers() {
-      return this.users.filter((item) => {
+      return this.getUser.filter((item) => {
         return item.name.match(this.searchUser);
       });
     },
+    getUser(){
+      return this.$store.getters.getUserList
+    }
   },
   methods: {
     onChangeFile(e) {
