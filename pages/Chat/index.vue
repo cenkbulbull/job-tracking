@@ -218,6 +218,9 @@ export default {
   width: 100%;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
 }
+.chat-app{
+  margin-top:4%;
+}
 .chat-app .people-list {
   width: 280px;
   position: absolute;
