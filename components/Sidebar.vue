@@ -72,7 +72,15 @@
       </template>-->
 
       <template #footer>
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column ms-1">
+          <vs-row justify="space-between" class="mb-1">
+            <vs-avatar badge-color="danger" badge-position="top-right">
+              <a style="color:#445464" href="https://github.com/cenkbulbull" target="_blank">
+                <i class="bx bxl-github mt-1"></i>
+              </a>
+            </vs-avatar>
+          </vs-row>
+
           <vs-row v-if="myMessages" justify="space-between" class="mb-1">
             <vs-avatar badge-color="danger" badge-position="top-right">
               <i

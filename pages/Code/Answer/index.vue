@@ -1,6 +1,18 @@
 <template>
   <div>
-    <div class="container mt-5 mb-3">
+    <vs-button
+      @click="$router.push('/Code')"
+      class="mt-2"
+      gradient
+      style="min-width: 60px"
+      warn
+      animation-type="scale"
+    >
+      <i class="bx bx-arrow-back"></i>
+      <template #animate> Geri </template>
+    </vs-button>
+
+    <div class="container mt-2 mb-3">
       <div v-if="getMyIssues.length > 0" class="row">
         <div
           v-for="(answer, keyindex) in getMyIssues[0].answers"
@@ -59,7 +71,7 @@ export default {
     strip_tags(remove) {
       return remove.replace(/(<([^>]+)>)/gi, "");
     },
-    async sayThankYou(tobesent){
+    async sayThankYou(tobesent) {
       const idData = await this.getUser.find((user) => {
         return user.name == tobesent;
       });
@@ -76,7 +88,7 @@ export default {
         ],
       };
       this.$store.dispatch("addMeetings", Notice);
-    }
+    },
   },
   computed: {
     getMyIssues() {
@@ -84,7 +96,7 @@ export default {
     },
     getUser() {
       return this.$store.getters.getUserList;
-    }
+    },
   },
 };
 </script>
