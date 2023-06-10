@@ -57,8 +57,7 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    //baseUrl: "http://localhost:3000/api" //local
-    baseUrl: "https://job-tracking-six.vercel.app/api" //vercel
+    baseUrl: "http://localhost:3000/api"
   },
   /*
   ** Build configuration
