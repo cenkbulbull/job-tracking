@@ -58,7 +58,7 @@ export default {
   */
   axios: {
     //baseUrl: "http://localhost:3000/api" 
-    baseUrl: "https://job-tracking-mvyq23vky-cenkbulbull.vercel.app/api"  
+    baseUrl: "https://job-tracking-one.vercel.app/api"  
   },
   /*
   ** Build configuration
